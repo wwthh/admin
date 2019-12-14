@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+      <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+	<!-- Bootstrap Styles-->
+    <link href="../static/css/bootstrap.css" rel="stylesheet" />
+     <!-- FontAwesome Styles-->
+    <link href="../static/css/font-awesome.css" rel="stylesheet" />
+        <!-- Custom Styles-->
+    <link href="../static/css/custom-styles.css" rel="stylesheet" />
+     <!-- Google Fonts-->
+   <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+</head>
+<body>
+    <div id="wrapper">
+        <nav class="navbar navbar-default top-navbar" role="navigation">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand"><i class="fa fa-comments"></i> <strong>Προμηθεύς </strong></a>
+            </div>
+        </nav>
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper" >
+            <div id="page-inner">
+			 <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="page-header">
+                            Certification <small>    </small>
+                        </h1>
+                    </div>
+                </div>
+                 <!-- /. ROW  -->
+              <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Is the expert's information already in database?
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    {% if s_message %}
+                                    <div class="alert alert-success"> {{ s_message}}</div>
+                                    {% endif %}
+                                    {% if f_message %}
+                                    <div class="alert alert-warning"> {{ f_message}}</div>
+                                    {% endif %}
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" name="if_in_database" id="Yes_radio" value="on" onclick="change_able()" >Yes
+                                                </label>
+                                            </div>
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" name="if_in_database" id="No_radio" value="off" onclick="change_disable()">No
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label >Expert id</label>
+                                            <input class="form-control" id="expert_id" name="expert_id"
+                                                   type="text" placeholder="expert_id" required="required"  disabled="">
+                                        </div>
+                                        <fieldset disabled="" id="field set">
+                                            <div class="form-group">
+                                                <label >name</label>
+                                                <input class="form-control" id="name" name="name" type="text" placeholder="name" required="required">
+                                            </div>
+                                            <div class="form-group">
+                                                <label >pubs num</label>
+                                                <input class="form-control" id="n_pubs" name="n_pubs" type="text" placeholder="n_pubs" required="required">
+                                            </div>
+                                            <div class="form-group">
+                                                <label >pubs(in json)</label>
+                                                <input class="form-control" id="pubs" name="pubs" type="text" placeholder="pubs" required="required">
+                                            </div>
+                                            <div class="form-group">
+                                                <label >orgs num</label>
+                                                <input class="form-control" id="n_orgs" name="n_orgs" type="text" placeholder="n_orgs" required="required">
+                                            </div>
+                                            <div class="form-group">
+                                                <label >orgs(in json)</label>
+                                                <input class="form-control" id="orgs" name="orgs" type="text" placeholder="orgs" required="required">
+                                            </div>
+                                            <div class="form-group">
+                                                <label >n_citation</label>
+                                                <input class="form-control" id="n_citation" name="n_citation" type="text" placeholder="n_citation" required="required">
+                                            </div>
+                                            <div class="form-group">
+                                                <label >h_index</label>
+                                                <input class="form-control" id="h_index" name="h_index" type="text" placeholder="h_index" required="required">
+                                            </div>
+                                            <div class="form-group">
+                                                <label >tags(in json)</label>
+                                                <input class="form-control" id="tags" name="tags" type="text" placeholder="tags" required="required">
+                                            </div>
+                                        </fieldset>
+                                        <input type="submit" class="btn btn-primary" value="Certificate" formaction="/certificate/" required="required">
+                                        <label> &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                        <button type="reset" class="btn btn-primary">Reset</button>
+                                    </form>
+                                </div>
+                                    <script>
+                                        function change_disable(){
+                                            document.getElementById("field set").disabled = "";
+                                            document.getElementById("expert_id").disabled = "false";
+                                        }
+
+                                        function change_able() {
+                                            document.getElementById("field set").disabled = "false";
+                                            document.getElementById("expert_id").disabled = "";
+                                        }
+                                    </script>
+                                <!-- /.col-lg-6 (nested) -->
+                            </div>
+                            <!-- /.row (nested) -->
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+			<footer><p>Copyright &copy; wwt All rights reserved.</p></footer>
+			</div>
+             <!-- /. PAGE INNER  -->
+            </div>
+         <!-- /. PAGE WRAPPER  -->
+        </div>
+     <!-- /. WRAPPER  -->
+    <!-- JS Scripts-->
+    <!-- jQuery Js -->
+    <script src="../static/js/jquery-1.10.2.js"></script>
+      <!-- Bootstrap Js -->
+    <script src="../static/js/bootstrap.min.js"></script>
+    <!-- Metis Menu Js -->
+    <script src="../static/js/jquery.metisMenu.js"></script>
+      <!-- Custom Js -->
+    <script src="../static/js/custom-scripts.js"></script>
+
+    </div>
+</body>
+</html>
