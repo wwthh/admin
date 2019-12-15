@@ -20,5 +20,6 @@ from mongodb.views import *
 urlpatterns = [
     path('', login),
     path('deal/<_id>', deal, name='deal'),
-    path('certificate/', certificate, name='certificate')
+    path('certificate/<_id>', certificate, name='certificate'),
+    path('refuse/<_id>',refuse, name='refuse'),
 ]

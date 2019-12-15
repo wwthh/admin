@@ -47,8 +47,14 @@
                     <!-- Advanced Tables -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Advanced Tables
+                            Certification Tables
                         </div>
+                        {% if s_message %}
+                            <div class="alert alert-success"> {{ s_message}}</div>
+                        {% endif %}
+                        {% if f_message %}
+                            <div class="alert alert-warning"> {{ f_message}}</div>
+                        {% endif %}
                         <div class="panel-body">
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
@@ -60,7 +66,7 @@
                                         <th>Apply_time</th>
                                         <th>Deal_time</th>
                                         <th>State</th>
-                                        <th>Operation</th>
+                                        <th class="text-center">Operation</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -73,7 +79,11 @@
                                         <td>{{ cer.deal_time }}</td>
                                         <td>{{ cer.state }}</td>
                                         {% load private %}
-                                        <td class="text-center"><a href="{% url 'deal' cer|private:'_id' %}"><button class="edit">Deal</button></a>
+                                        <td class="text-center">
+                                            <a href="{% url 'deal' cer|private:'_id' %}"><button class="edit">Deal &nbsp;&nbsp;</button></a>
+                                            <label> &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                            <a href="{% url 'refuse' cer|private:'_id' %}"><button class="edit">Refuse</button></a>
+                                        </td>
                                     </tr>
                                     {% endfor %}
                                     </tbody>

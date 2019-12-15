@@ -10,9 +10,7 @@ class Certification(Document):
     tags = fields.ListField(required=True)
     apply_time = fields.DateTimeField(require=True)
     deal_time = fields.DateTimeField(require=True)
-    state = fields.StringField(require=True)   # -1 未通过， 0 未处理， 1 通过
-    message = fields.StringField(required=True) # 未通过/通过的理由/信息
-    isCertification = fields.BooleanField()
+    state = fields.StringField(require=True)   # 通过的状态
     _class = fields.StringField()
     meta = {'collection' : 'Certification'}
 

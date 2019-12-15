@@ -2,11 +2,22 @@ import hashlib
 import json
 
 import requests
+from bson import ObjectId
 from django.forms import forms, CharField, PasswordInput
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
+import datetime
 
 from .models import *
+
+def get_all_data():
+    cer_set = Certification.objects.all()
+    email_set = []
+    for cer in cer_set:
+        id = cer.user_id.split('\"')[1]
+        email_set.append(users.objects.filter(_id=id)[0].email)
+    email_set.reverse()
+    return cer_set, email_set
 
 
 def encrypt_md5(s):
@@ -25,13 +36,8 @@ def login(request):
         username = request.POST.get('username')
         password = encrypt_md5(request.POST.get('password'))
         if username == 'Manager' and password == "a68ae8cb01ff58d13b6cb431d6628543":
-            cer_set = Certification.objects.all()
-            email_set = []
-            for cer in cer_set:
-                id = cer.user_id.split('\"')[1]
-                email_set.append(users.objects.filter(_id=id)[0].email)
-            email_set.reverse()
-            return render(request, 'check_cer.html', {'cer_set': cer_set, 'email_set': email_set})
+            data = get_all_data()
+            return render(request, 'check_cer.html', {'cer_set': data[0], 'email_set': data[1]})
         else:
             return render(request, 'login.html', {'login_error': 'Username or password wrong.'})
     return render(request, 'login.html')
@@ -42,17 +48,31 @@ def deal(request, _id):
     return render(request, 'certificate.html', {'cer': obj})
 
 
-def certificate(request):
+def refuse(request, _id):
+    Certification.objects.filter(_id=_id).update(state="not pass")
+    Certification.objects.filter(_id=_id).update(deal_time=datetime.datetime.now())
+    data = get_all_data()
+    return render(request, 'check_cer.html', {'f_message':'Refuse successfully.',
+                                              'cer_set': data[0], 'email_set': data[1]})
+
+
+def certificate(request, _id):
     if request.method == 'POST':
         if_in_database = request.POST.get('if_in_database')
         if if_in_database == 'on':
             try:
                 expert_id = request.POST.get('expert_id')
-                url = 'http://ip:port/v1/experts/certificateExpert/' + expert_id
-                requests.get(url)
-                return render(request, 'certificate.html', {'s_message':'certification success.'})
+                # url = 'http://ip:port/v1/experts/certificateExpert/' + expert_id
+                # requests.get(url)
+                Certification.objects.filter(_id=_id).update(state="Pass")
+                Certification.objects.filter(_id=_id).update(deal_time=datetime.datetime.now())
+                data = get_all_data()
+                return render(request, 'check_cer.html', {'s_message':'certification success.',
+                                                          'cer_set': data[0], 'email_set': data[1]})
             except Exception:
-                return render(request, 'certificate.html', {'f_message': 'Certification failed.'})
+                data = get_all_data()
+                return render(request, 'check_cer.html', {'f_message': 'Certification failed.',
+                                                          'cer_set': data[0], 'email_set': data[1]})
         elif if_in_database == 'off':
             try:
                 name = request.POST.get('name')
@@ -67,8 +87,14 @@ def certificate(request):
                         'orgs':orgs, 'n_citation':n_citation, 'h_index':h_index, 'tags':tags}
                 url = 'http://ip:port/v1/experts/'
                 requests.post(url, data=data)
-                return render(request, 'certificate.html', {'s_message':'certification success.'})
+                data = get_all_data()
+                return render(request, 'check_cer.html', {'s_message':'certification success.',
+                                                          'cer_set': data[0], 'email_set': data[1]})
             except Exception:
-                return render(request, 'certificate.html', {'f_message': 'Certification failed.'})
+                data = get_all_data()
+                return render(request, 'check_cer.html', {'f_message': 'Certification failed.',
+                                                          'cer_set': data[0], 'email_set': data[1]})
         else:
-            return render(request, 'certificate.html', {'f_message': 'Unknown error.'})
+            data = get_all_data()
+            return render(request, 'check_cer.html', {'f_message': 'Unknown error.',
+                                                      'cer_set': data[0], 'email_set': data[1]})
