@@ -75,14 +75,28 @@
                                         <td>{{cer.name}}</td>
                                         <td>{{cer.org}}</td>
                                         <td>{{ email_set.pop }}</td>
-                                        <td>{{ cer.apply_time }}</td>
-                                        <td>{{ cer.deal_time }}</td>
+                                        <td>{{ apply_time_set.pop }}</td>
+                                        <td>{{ deal_time_set.pop }}</td>
                                         <td>{{ cer.state }}</td>
                                         {% load private %}
                                         <td class="text-center">
-                                            <a href="{% url 'deal' cer|private:'_id' %}"><button class="edit">Deal &nbsp;&nbsp;</button></a>
+                                            {% if cer.state ==  "ing"%}
+                                            <a href="{% url 'deal' cer|private:'_id'%}">
+                                                <button class="text-center">Check</button>
+                                            </a>
                                             <label> &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                            <a href="{% url 'refuse' cer|private:'_id' %}"><button class="edit">Refuse</button></a>
+                                            <a href="{% url 'refuse' cer|private:'_id'%}">
+                                                <button class="text-center">Refuse</button>
+                                            </a>
+                                            {% else %}
+                                                <a href="{% url 'deal' cer|private:'_id'%}">
+                                                    <button class="text-center" disabled="">Check</button>
+                                                </a>
+                                                <label> &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                                <a href="{% url 'refuse' cer|private:'_id'%}">
+                                                    <button class="text-center" disabled="">Refuse</button>
+                                                </a>
+                                            {% endif %}
                                         </td>
                                     </tr>
                                     {% endfor %}
