@@ -59,7 +59,7 @@ def deal(request, _id):
 
 
 def refuse(request, _id):
-    Certification.objects.filter(_id=_id).update(state="not pass")
+    Certification.objects.filter(_id=_id).update(state="Not Pass")
     Certification.objects.filter(_id=_id).update(deal_time=int(time.time() * 1000))
     data = get_all_data()
     return render(request, 'check_cer.html', {'f_message':'Refuse successfully.',
@@ -75,9 +75,14 @@ def certificate(request, _id):
                 expert_id = request.POST.get('expert_id')
                 url = 'http://'+ ip +'/v1/experts/certificateExpert/' + expert_id + '/?' + 'userid=' + _id
                 response = requests.get(url=url)
+                if not json.loads(response.content).get('success'):
+                    raise Exception
                 Certification.objects.filter(_id=_id).update(state="Pass")
                 Certification.objects.filter(_id=_id).update(deal_time=int(time.time() * 1000))
-                users.objects.filter(_id=_id).update(type=expert_id)
+                user_id = Certification.objects.filter(_id=_id)[0].user_id
+                user = users.objects.filter(_id=str(user_id))[0]
+                user.type = expert_id
+                user.save()
                 data = get_all_data()
                 return render(request, 'check_cer.html', {'s_message':'certification success.',
                                                           'cer_set': data[0], 'email_set': data[1],
@@ -102,9 +107,15 @@ def certificate(request, _id):
                         'isCertification':str(_id)}
                 url = 'http://' + ip + '/v1/experts/'
                 response = requests.post(url=url, data=json.dumps(data))
+                if not json.loads(response.content).get('success'):
+                    raise Exception
                 Certification.objects.filter(_id=_id).update(state="Pass")
                 Certification.objects.filter(_id=_id).update(deal_time=int(time.time() * 1000))
-                users.objects.filter(_id=_id).update()
+                expert_id = json.loads(response.content).get('content').get('id')
+                user_id = Certification.objects.filter(_id=_id)[0].user_id
+                user = users.objects.filter(_id=str(user_id))[0]
+                user.type = expert_id
+                user.save()
                 data = get_all_data()
                 return render(request, 'check_cer.html', {'s_message':'certification success.',
                                                           'cer_set': data[0], 'email_set': data[1],
